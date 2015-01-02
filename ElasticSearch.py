@@ -39,7 +39,7 @@ class ElasticSearch:
 
     def getClusterInfo(self):
         conn = httplib.HTTPConnection(self.agentConfig['ElasticSearch']['host'])
-        conn.request("GET", "/_cluster/nodes/stats?&all=true")
+        conn.request("GET", "/_nodes/_local/stats?&all=true")
         return conn.getresponse().read()
 
     def process_data(self):
