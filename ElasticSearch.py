@@ -55,16 +55,16 @@ class ElasticSearch:
             name = stats['nodes'][node]['name']
 
             # Process CPU & Memory
-            sd_data[name + ' - cpu %']            = stats['nodes'][node]['process']['cpu']['percent']
-            sd_data[name + ' - rss (MiB)']        = stats['nodes'][node]['process']['mem']['resident_in_bytes'] / one_megabyte_in_bytes
-            sd_data[name + ' - share (MiB)']      = stats['nodes'][node]['process']['mem']['share_in_bytes']  / one_megabyte_in_bytes
-            sd_data[name + ' - virtual (MiB)']    = stats['nodes'][node]['process']['mem']['total_virtual_in_bytes']  / one_megabyte_in_bytes
+            sd_data['cpu %']            = stats['nodes'][node]['process']['cpu']['percent']
+            sd_data['rss (MiB)']        = stats['nodes'][node]['process']['mem']['resident_in_bytes'] / one_megabyte_in_bytes
+            sd_data['share (MiB)']      = stats['nodes'][node]['process']['mem']['share_in_bytes']  / one_megabyte_in_bytes
+            sd_data['virtual (MiB)']    = stats['nodes'][node]['process']['mem']['total_virtual_in_bytes']  / one_megabyte_in_bytes
 
             # Size on disk
-            sd_data[name + ' - size (MiB)'] = stats['nodes'][node]['indices']['store']['size_in_bytes'] / one_megabyte_in_bytes
+            sd_data['size (MiB)'] = stats['nodes'][node]['indices']['store']['size_in_bytes'] / one_megabyte_in_bytes
 
             # Doc count
-            sd_data[name + ' - num docs'] = stats['nodes'][node]['indices']['docs']['count']
+            sd_data['num docs'] = stats['nodes'][node]['indices']['docs']['count']
 
         return sd_data
 
