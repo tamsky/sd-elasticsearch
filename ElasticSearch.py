@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 import httplib
 import json
+import logging as log
 
 class ElasticSearch:
     def __init__(self, agentConfig, checksLogger, rawConfig):
@@ -74,6 +75,9 @@ class ElasticSearch:
                 'cluster_status': 2
             }
 
+        # log.info("nodeStats")
+        # log.info(json.dumps(nodeStats))
+
         if clusterStats['status'] == 'green':
             clusterStats['status'] = 0
         elif clusterStatus['status'] == 'yellow':
@@ -90,42 +94,42 @@ class ElasticSearch:
         sd_data['cluster_unassigned_shards'] = clusterHealth['unassigned_shards']
             
         # ES data
-        sd_data['num docs']                      = nodeStats['nodes'][node]['indices']['docs']['count']
-        sd_data['indices merges total']          = nodeStats['nodes'][node]['indices']['merges']['total']
-        sd_data['indices indexing delete total'] = nodeStats['nodes'][node]['indices']['indexing']['delete_total']
-        sd_data['indices indexing index total']  = nodeStats['nodes'][node]['indices']['indexing']['index_total']
-        sd_data['indices search fetch total']    = nodeStats['nodes'][node]['indices']['search']['fetch_total']
-        sd_data['indices search query total']    = nodeStats['nodes'][node]['indices']['search']['query_total']
-        sd_data['size (MiB)']                    = nodeStats['nodes'][node]['indices']['store']['size_in_bytes'] / one_megabyte_in_bytes
+        sd_data['num docs']                      = nodeStats['indices']['docs']['count']
+        sd_data['indices merges total']          = nodeStats['indices']['merges']['total']
+        sd_data['indices indexing delete total'] = nodeStats['indices']['indexing']['delete_total']
+        sd_data['indices indexing index total']  = nodeStats['indices']['indexing']['index_total']
+        sd_data['indices search fetch total']    = nodeStats['indices']['search']['fetch_total']
+        sd_data['indices search query total']    = nodeStats['indices']['search']['query_total']
+        sd_data['size (MiB)']                    = nodeStats['indices']['store']['size_in_bytes'] / one_megabyte_in_bytes
 
         # ES Binary state
-        sd_data['open http connections']      = nodeStats['nodes'][node]['http']['current_open']
+        sd_data['open http connections']      = nodeStats['http']['current_open']
 
 
         # Process CPU & Memory
-        sd_data['cpu %']                      = nodeStats['nodes'][node]['process']['cpu']['percent']
-        sd_data['rss (MiB)']                  = nodeStats['nodes'][node]['process']['mem']['resident_in_bytes'] / one_megabyte_in_bytes
-        sd_data['share (MiB)']                = nodeStats['nodes'][node]['process']['mem']['share_in_bytes']  / one_megabyte_in_bytes
-        sd_data['virtual (MiB)']              = nodeStats['nodes'][node]['process']['mem']['total_virtual_in_bytes']  / one_megabyte_in_bytes
+        sd_data['cpu %']                      = nodeStats['process']['cpu']['percent']
+        sd_data['rss (MiB)']                  = nodeStats['process']['mem']['resident_in_bytes'] / one_megabyte_in_bytes
+        sd_data['share (MiB)']                = nodeStats['process']['mem']['share_in_bytes']  / one_megabyte_in_bytes
+        sd_data['virtual (MiB)']              = nodeStats['process']['mem']['total_virtual_in_bytes']  / one_megabyte_in_bytes
 
-        sd_data['free mem %']                 = nodeStats['nodes'][node]['os']['mem']['free_percent']
-        sd_data['used mem %']                 = nodeStats['nodes'][node]['os']['mem']['used_percent']
-        sd_data['heap used %']                = nodeStats['nodes'][node]['jvm']['mem']['heap_used_percent']
-        sd_data['thread count']               = nodeStats['nodes'][node]['jvm']['threads']['count']
-        sd_data['thread count (peak)']        = nodeStats['nodes'][node]['jvm']['threads']['peak_count']
-        sd_data['process uptime (seconds)']   = nodeStats['nodes'][node]['jvm']['uptime_in_millis'] / 1000
+        sd_data['free mem %']                 = nodeStats['os']['mem']['free_percent']
+        sd_data['used mem %']                 = nodeStats['os']['mem']['used_percent']
+        sd_data['heap used %']                = nodeStats['jvm']['mem']['heap_used_percent']
+        sd_data['thread count']               = nodeStats['jvm']['threads']['count']
+        sd_data['thread count (peak)']        = nodeStats['jvm']['threads']['peak_count']
+        sd_data['process uptime (seconds)']   = nodeStats['jvm']['uptime_in_millis'] / 1000
 
         # Network (apparently ES gathers from /proc/net/sockstat:)
-        sd_data['tcp active opens']           = nodeStats['nodes'][node]['network']['tcp']['active_opens']
-        sd_data['tcp attempt fails']          = nodeStats['nodes'][node]['network']['tcp']['attempt_fails']
-        sd_data['tcp current established']    = nodeStats['nodes'][node]['network']['tcp']['curr_estab']
-        sd_data['tcp established resets']     = nodeStats['nodes'][node]['network']['tcp']['estab_resets']
-        sd_data['tcp in errors']              = nodeStats['nodes'][node]['network']['tcp']['in_errs']
-        sd_data['tcp in segments']            = nodeStats['nodes'][node]['network']['tcp']['in_segs']
-        sd_data['tcp out resets']             = nodeStats['nodes'][node]['network']['tcp']['out_rsts']
-        sd_data['tcp out segments']           = nodeStats['nodes'][node]['network']['tcp']['out_segs']
-        sd_data['tcp passive opens']          = nodeStats['nodes'][node]['network']['tcp']['passive_opens']
-        sd_data['tcp retransmitted segments'] = nodeStats['nodes'][node]['network']['tcp']['retrans_segs']
+        sd_data['tcp active opens']           = nodeStats['network']['tcp']['active_opens']
+        sd_data['tcp attempt fails']          = nodeStats['network']['tcp']['attempt_fails']
+        sd_data['tcp current established']    = nodeStats['network']['tcp']['curr_estab']
+        sd_data['tcp established resets']     = nodeStats['network']['tcp']['estab_resets']
+        sd_data['tcp in errors']              = nodeStats['network']['tcp']['in_errs']
+        sd_data['tcp in segments']            = nodeStats['network']['tcp']['in_segs']
+        sd_data['tcp out resets']             = nodeStats['network']['tcp']['out_rsts']
+        sd_data['tcp out segments']           = nodeStats['network']['tcp']['out_segs']
+        sd_data['tcp passive opens']          = nodeStats['network']['tcp']['passive_opens']
+        sd_data['tcp retransmitted segments'] = nodeStats['network']['tcp']['retrans_segs']
 
         return sd_data
 
