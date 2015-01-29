@@ -90,13 +90,13 @@ class ElasticSearch:
         sd_data['cluster_unassigned_shards'] = clusterHealth['unassigned_shards']
             
         # ES data
-        sd_data['num docs']                      = stats['nodes'][node]['indices']['docs']['count']
-        sd_data['indices merges total']          = stats['nodes'][node]['indices']['merges']['total']
-        sd_data['indices indexing delete total'] = stats['nodes'][node]['indices']['indexing']['delete_total']
-        sd_data['indices indexing index total']  = stats['nodes'][node]['indices']['indexing']['index_total']
-        sd_data['indices search fetch total']    = stats['nodes'][node]['indices']['search']['fetch_total']
-        sd_data['indices search query total']    = stats['nodes'][node]['indices']['search']['query_total']
-        sd_data['size (MiB)']                    = stats['nodes'][node]['indices']['store']['size_in_bytes'] / one_megabyte_in_bytes
+        sd_data['num docs']                      = nodeStats['nodes'][node]['indices']['docs']['count']
+        sd_data['indices merges total']          = nodeStats['nodes'][node]['indices']['merges']['total']
+        sd_data['indices indexing delete total'] = nodeStats['nodes'][node]['indices']['indexing']['delete_total']
+        sd_data['indices indexing index total']  = nodeStats['nodes'][node]['indices']['indexing']['index_total']
+        sd_data['indices search fetch total']    = nodeStats['nodes'][node]['indices']['search']['fetch_total']
+        sd_data['indices search query total']    = nodeStats['nodes'][node]['indices']['search']['query_total']
+        sd_data['size (MiB)']                    = nodeStats['nodes'][node]['indices']['store']['size_in_bytes'] / one_megabyte_in_bytes
 
         # ES Binary state
         sd_data['open http connections']      = nodeStats['nodes'][node]['http']['current_open']
