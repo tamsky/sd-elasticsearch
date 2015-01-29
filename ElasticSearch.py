@@ -33,8 +33,12 @@ class ElasticSearch:
         if ('ElasticSearch' not in self.agentConfig):
             self.setDefaultConfig()
 
-    def _get(self, path, host_port='127.0.0.1:9200'):
-        conn = httplib.HTTPConnection(host_port)
+    def setDefaultConfig(self):
+        self.agentConfig = {}
+        self.agentConfig['ElasticSearch'] = {'host': 'localhost:9200'}
+
+    def _get(self, path):
+        conn = httplib.HTTPConnection(self.agentConfig['ElasticSearch']['host'])
         conn.request("GET", path)
         result = conn.getresponse().read()
         return json.loads(result)
